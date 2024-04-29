@@ -34,12 +34,14 @@ class Classifier {
         vector<DataInstance> trainingSet;
         vector<DataInstance> testSet;
 
+        string tipo;
+
     public:
         // Constructor
-        Classifier(const vector<vector<DataInstance>>& datos);
+        Classifier(const vector<vector<DataInstance>>& datos, string type);
 
         // Constructor con pesos
-        Classifier(const vector<vector<DataInstance>>& datos, const vector<double>& pesos);
+        Classifier(const vector<vector<DataInstance>>& datos, const vector<double>& pesos, string type);
 
         // K-fold Cross Validation
         void kFoldCrossValidation();
@@ -61,6 +63,9 @@ class Classifier {
 
         // Imprimir resultados
         void printResults() const;
+
+        // Imprimir resultados en fichero csv
+        void resultsToCSV() const;
 };
 
 #endif

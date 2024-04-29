@@ -87,28 +87,25 @@ int main(int argc, char* argv[]) {
     // Imprimir los datos normalizados (opcional)
     //parser.printData();
     
-    // Crear cabecera
+    // Crear tipo de modelo (string)
     string mayus_dataset = datasetFilename;
     transform(mayus_dataset.begin(), mayus_dataset.end(), mayus_dataset.begin(), ::toupper);
-    string header = "\n\n<<<<<<<   " + mayus_dataset + " - ";
+    mayus_dataset += "_";
     
     // Llamar al modelo correspondiente e imprimir cabecera
     if (modelType == ONE_NN) {
-        Classifier one_classifier(parser.getDataInSets());
-        header += "1NN   >>>>>>>>";
-        cout << header << endl;
+        mayus_dataset += "1_NN";
+        Classifier one_classifier(parser.getDataInSets(), mayus_dataset);
         one_classifier.kFoldCrossValidation();
     }
     else if (modelType == GREEDY) {
-        GreedyClassifier greedy_classifier(parser.getDataInSets());
-        header += "GREEDY   >>>>>>>>";
-        cout << header << endl;
+        mayus_dataset += "GREEDY";
+        GreedyClassifier greedy_classifier(parser.getDataInSets(), mayus_dataset);
         greedy_classifier.kFoldCrossValidation();
     }
     else if (modelType == BUSQUEDA_LOCAL) {
-        BLClassifier bl_classifier(parser.getDataInSets());
-        header += "BL   >>>>>>>>";
-        cout << header << endl;
+        mayus_dataset += "BL";
+        BLClassifier bl_classifier(parser.getDataInSets(), mayus_dataset);
         bl_classifier.kFoldCrossValidation();
     }
     else {

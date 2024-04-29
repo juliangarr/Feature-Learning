@@ -32,4 +32,4 @@ $(TARGET): $(OBJS)
 	
 # Clean up object files and the target executable
 clean:
-	rm -rf $(BUIDIR) $(TARGET) $(OBJS)
+	rm -rf $(BUIDIR) $(TARGET) $(OBJS) $(BINDIR)/results/*

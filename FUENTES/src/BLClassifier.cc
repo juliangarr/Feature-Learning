@@ -5,7 +5,7 @@
 using namespace std;
 using Random = effolkronium::random_static;
 
-BLClassifier::BLClassifier(const vector<vector<DataInstance>>& datos) : Classifier(datos) {
+BLClassifier::BLClassifier(const vector<vector<DataInstance>>& datos, string type) : Classifier(datos, type) {
     MAX_NEIGHBORS = numFeatures*20;
 }
 
@@ -48,12 +48,10 @@ double BLClassifier::funcionObjetivoBL(const vector<double>& weights) const {
 }
 
 tuple<vector<double>, double> BLClassifier::train(int fold) {
-    vector<double> weight_results = busquedaLocal();
-
-    return make_tuple(weight_results, funcionObjetivo(weight_results, fold));
+    return busquedaLocal(fold);
 }
 
-vector<double> BLClassifier::busquedaLocal() const{
+tuple<vector<double>, double> BLClassifier::busquedaLocal(int fold) {
     // Initialize the evaluation and neighbors counters
     int evaluationsDone = 0;
     int consecutiveNeighbors = 0;
@@ -68,6 +66,9 @@ vector<double> BLClassifier::busquedaLocal() const{
     vector<int> index(numFeatures);
     for(int i = 0; i < numFeatures; i++) index[i] = i;
 
+    vector<double> neighborWeights;
+    double neighborFitness;
+
     // Loop of local search
     while ( evaluationsDone < MAX_EVALUATIONS && consecutiveNeighbors < MAX_NEIGHBORS ) {
         // Generate a random permutation of index about the features
@@ -77,11 +78,13 @@ vector<double> BLClassifier::busquedaLocal() const{
         for (int i = 0; i < numFeatures; i++){
             if (consecutiveNeighbors < MAX_NEIGHBORS && evaluationsDone < MAX_EVALUATIONS ) {
                 // Generate a neighbor solution
-                vector<double> neighborWeights = generaVecino(bestWeights, index[i]);
+                    //neighborWeights = generaVecino(bestWeights, index[i]);
+                neighborWeights = bestWeights;
+                neighborWeights[index[i]] = generaVecino(bestWeights[index[i]]);
                 consecutiveNeighbors++;
 
                 // Evaluate the neighbor solution
-                double neighborFitness = funcionObjetivoBL(neighborWeights);
+                neighborFitness = funcionObjetivoBL(neighborWeights);
                 evaluationsDone++;
 
                 // Update the best solution
@@ -95,25 +98,46 @@ vector<double> BLClassifier::busquedaLocal() const{
         }
     }
 
-    return bestWeights;
+    // Calculate fitness
+    double fitness = funcionObjetivo(bestWeights, fold); 
+
+    return make_tuple(bestWeights, fitness);
 }
 
-vector<double> BLClassifier::generaVecino(const vector<double>& weights, int index) const {
-    vector<double> newWeights = weights;
-
+double BLClassifier::generaVecino(double peso_pos) const {
     // Create a normal distribution
     normal_distribution<double> distribution(MEDIA, sqrt(VARIANZA));
 
     // Modify the weight of the feature with a random value (normal distribution)
-    newWeights[index] += Random::get(distribution);
+    peso_pos += Random::get(distribution);
 
     // Truncate the value to the range [0, 1]
-    if (newWeights[index] < 0.0) {
-        newWeights[index] = 0.0;
+    if (peso_pos < 0.0) {
+        peso_pos = 0.0;
     }
-    else if (newWeights[index] > 1.0) {
-        newWeights[index] = 1.0;
+    else if (peso_pos > 1.0) {
+        peso_pos = 1.0;
     }
 
-    return newWeights;
+    return peso_pos;
 }
+
+// vector<double> BLClassifier::generaVecino(const vector<double>& weights, int index) const {
+//     vector<double> newWeights = weights;
+
+//     // Create a normal distribution
+//     normal_distribution<double> distribution(MEDIA, sqrt(VARIANZA));
+
+//     // Modify the weight of the feature with a random value (normal distribution)
+//     newWeights[index] += Random::get(distribution);
+
+//     // Truncate the value to the range [0, 1]
+//     if (newWeights[index] < 0.0) {
+//         newWeights[index] = 0.0;
+//     }
+//     else if (newWeights[index] > 1.0) {
+//         newWeights[index] = 1.0;
+//     }
+
+//     return newWeights;
+// }

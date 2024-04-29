@@ -9,7 +9,7 @@ using namespace std;
 
 class GreedyClassifier : public Classifier{
     public:
-        GreedyClassifier(const vector<vector<DataInstance>>& datos);
+        GreedyClassifier(const vector<vector<DataInstance>>& datos, string type);
         
         tuple<vector<double>, double> train(int fold) override;
 

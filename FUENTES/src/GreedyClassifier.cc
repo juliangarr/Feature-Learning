@@ -5,7 +5,7 @@
 
 using namespace std;
 
-GreedyClassifier::GreedyClassifier(const vector<vector<DataInstance>>& datos) : Classifier(datos) {}
+GreedyClassifier::GreedyClassifier(const vector<vector<DataInstance>>& datos, string type) : Classifier(datos, type) {}
 
 tuple<vector<double>, double> GreedyClassifier::train(int fold) {
     return greedy(fold);

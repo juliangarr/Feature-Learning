@@ -16,11 +16,11 @@ class BLClassifier : public Classifier{
         int MAX_NEIGHBORS;
 
     public:
-        BLClassifier(const vector<vector<DataInstance>>& datos);
+        BLClassifier(const vector<vector<DataInstance>>& datos, string type);
 
         tuple<vector<double>, double> train(int fold) override;
 
-        vector<double> busquedaLocal() const;
+        tuple<vector<double>, double> busquedaLocal(int fold);
 
         vector<double> generaSolucionInicial() const;
 
@@ -28,7 +28,8 @@ class BLClassifier : public Classifier{
 
         double calculateClassRateInTrain(const vector<double>& weights) const;
 
-        vector<double> generaVecino(const vector<double>& weights, int index) const;
+        double generaVecino(double peso_pos) const;
+        //vector<double> generaVecino(const vector<double>& weights, int index) const;
 };
 
 #endif

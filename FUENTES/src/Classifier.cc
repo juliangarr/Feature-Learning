@@ -4,6 +4,7 @@
 #include <chrono>
 #include <numeric>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 
 using namespace std;
@@ -43,7 +44,10 @@ double weightedEuclideanDistance(const vector<double>& instance1, const vector<d
     return sqrt(distance);
 }
 
-Classifier::Classifier(const vector<vector<DataInstance>>& datos) : data(datos) {
+Classifier::Classifier(const vector<vector<DataInstance>>& datos, string type) : data(datos) {
+    // Setteamos el nombre del clasificador
+    tipo = type;
+
     k_Folds = data.size();
     numFeatures = data[0][0].features.size();
     featureWeights = vector<double>(numFeatures, 1.0);  // Default, every weight is 1.0 (1NN Classifier)
@@ -58,7 +62,10 @@ Classifier::Classifier(const vector<vector<DataInstance>>& datos) : data(datos) 
     testSet = vector<DataInstance>();
 }
 
-Classifier::Classifier(const vector<vector<DataInstance>>& datos, const vector<double>& pesos) : data(datos), featureWeights(pesos) {
+Classifier::Classifier(const vector<vector<DataInstance>>& datos, const vector<double>& pesos, string type) : data(datos), featureWeights(pesos) {
+    // Setteamos el nombre del clasificador
+    tipo = type;
+
     k_Folds = data.size();
     numFeatures = data[0][0].features.size();
 
@@ -107,6 +114,9 @@ void Classifier::kFoldCrossValidation() {
 
     // Print results
     printResults();
+
+    // Print results to CSV
+    resultsToCSV();
 }
 
 tuple<vector<double>, double> Classifier::train(int fold) {
@@ -163,28 +173,103 @@ double Classifier::funcionObjetivo(const vector<double>& weights, int fold) {
     return (ALPHA * tasa_class[fold] + (1.0 - ALPHA) * tasa_red[fold]);
 }
 
-void Classifier::printResults() const {
-    // Print partial results
-    cout << "--------- RESULTADOS PARCIALES ---------\n" << endl;
-    cout << "Partición\tTest\tReducción\tFitness\tTiempo" << endl;
-    cout << "\t\t[en %]\t[en %]\t[en %]" << endl;
+// void Classifier::resultsToCSV() const {
+//     // Create filename
+//     string filename = "results_" + tipo + ".csv";
 
-    for (int fold = 0; fold < k_Folds; ++fold) {
-        cout << fold + 1 << fixed << setprecision(2) << tasa_class[fold] << "\t" << tasa_red[fold] << "\t" << fitness[fold] << "\t" << scientific << tiempo[fold] << endl;
+//     ofstream outputFile(filename);
+
+//     // Write header
+//     outputFile << "--------- RESULTADOS FINALES ---------   " + tipo + "   " << endl;
+//     outputFile << endl;
+//     outputFile << "Partición,%_class,%_red,Fit.,T" << endl;
+
+//     // Write data for each fold
+//     for (int fold = 0; fold < k_Folds; ++fold) {
+//         outputFile << fold + 1 << ","; // Partition number
+
+//         // Write Ecoli data
+//         outputFile << fixed << setprecision(2) << tasa_class[fold] << "," << tasa_red[fold] << ","  << fitness[fold] << "," << scientific << tiempo[fold];
+
+//         // New line for next fold
+//         outputFile << endl;
+//     }
+
+//     // Write average row
+//     outputFile << "Media,";
+//     outputFile << fixed << setprecision(2) << mean(tasa_class) << ","  << mean(tasa_red) << ","  << mean(fitness) << "," << scientific << mean(tiempo);
+
+//     outputFile.close();
+// }
+
+void Classifier::resultsToCSV() const {
+    // Crear la ruta completa del archivo
+    // string filepath = "../../BIN/results/results_" + tipo + ".csv";
+    string filepath = "results/results_" + tipo + ".csv";
+
+    ofstream outputFile(filepath);
+
+    // Verificar si el archivo se abrió correctamente
+    if (!outputFile.is_open()) {
+        cout << "Error al abrir el archivo " << filepath << endl;
+        return;
     }
 
-    // Calculate and print Final Results
+    // Escribir encabezado
+    outputFile << "--------- RESULTADOS FINALES ---------   " + tipo + "   " << endl;
+    outputFile << endl;
+    outputFile << "Partición,%_class,%_red,Fit.,T" << endl;
+
+    // Escribir datos para cada fold
+    for (int fold = 0; fold < k_Folds; ++fold) {
+        outputFile << fold + 1 << ","; // Número de partición
+
+        // Escribir datos
+        outputFile << fixed << setprecision(2) << tasa_class[fold] << "," << tasa_red[fold] << ","  << fitness[fold] << "," << scientific << tiempo[fold];
+
+        // Nueva línea para el siguiente fold
+        outputFile << endl;
+    }
+
+    // Escribir fila promedio
+    outputFile << "Media,";
+    outputFile << fixed << setprecision(2) << mean(tasa_class) << ","  << mean(tasa_red) << ","  << mean(fitness) << "," << scientific << mean(tiempo);
+
+    outputFile.close();
+}
+
+void Classifier::printResults() const {
+    // Create header
+    string header = "\n\n<<<<<<<   " + tipo + "   >>>>>>>>";
+
+    // Print header
+    cout << header << endl;
+
+    // Print Partial Results
+    cout << "--------- RESULTADOS PARCIALES ---------\n" << endl;
+    cout << "Partición\tTrain\tTest\tReducción\tFitness\tTiempo" << endl;
+    cout << "\t\t[en %]\t[en %]\t[en %]\t\t\t[en ms]" << endl;
+
+    for (int fold = 0; fold < k_Folds; ++fold) {
+        cout << "\t" << fold + 1 << "\t - \t" << fixed << setprecision(2) << tasa_class[fold] << "\t" << tasa_red[fold] << "\t\t" << fitness[fold] << "\t" << scientific << tiempo[fold] << endl;
+    }
+    // Restaurar el formato de salida a fixed
+    cout << fixed;
+
+    // Calculate Final Results
     double tasa_c = mean(tasa_class);
     double tasa_r = mean(tasa_red);
     double fit = mean(fitness);
     double time = mean(tiempo);
 
+    // Print Final Results
     cout << "\n--------- RESULTADOS FINALES ---------" << endl;
-    cout << "- Tasa Clasificación: \t" << tasa_c << "%" << endl;
-    cout << "- Tasa Reducción: \t" << tasa_r << "%" << endl;
+    cout << "- Tasa Clasificación: \t" << tasa_c << " %" << endl;
+    cout << "- Tasa Reducción: \t" << tasa_r << " %" << endl;
     cout << "- Fitness: \t\t" << fit << endl;
-    cout << "- Tiempo: \t\t" << scientific << time << " s" << endl;
+    cout << "- Tiempo: \t\t" << scientific << time << " ms" << endl;
     
+    /*
     // Print trained weights
     cout << "\n- Pesos finales: ";
     for (size_t i = 0; i < trainedWeights.size(); i++) {
@@ -193,38 +278,9 @@ void Classifier::printResults() const {
             cout << trainedWeights[i][j] << " ";
         }
     }
+    */
+    // Restaurar el formato de salida a fixed
+    cout << fixed;
+
     cout << endl;
 }
-
-// void Classifier::printResults() const {
-//     // Print partial results
-//     cout << "--------- RESULTADOS PARCIALES ---------\n" << endl;
-//     cout << "Partición\tTrain\tTest\tReducción\tFitness" << endl;
-//     cout << "\t\t[en %]\t[en %]\t[en %]" << endl;
-
-//     for (int fold = 0; fold < k_Folds; ++fold) {
-//         cout << "\t" << fold + 1 << "\t - \t" << fixed << setprecision(2) << tasa_class[fold] << "\t" << tasa_red[fold] << "\t\t" << fitness[fold] << endl;
-//     }
-
-//     // Calculate and print Final Results
-//     double tasa_c = mean(tasa_class);
-//     double tasa_r = mean(tasa_red);
-//     double fit = mean(fitness);
-//     double time = mean(tiempo);
-
-//     cout << "\n--------- RESULTADOS FINALES ---------" << endl;
-//     cout << "- Tasa Clasificación: \t" << tasa_c << "%" << endl;
-//     cout << "- Tasa Reducción: \t" << tasa_r << "%" << endl;
-//     cout << "- Fitness: \t\t" << fit << endl;
-//     cout << "- Tiempo: \t\t" << time << " ms" << endl;
-    
-//     // Print trained weights
-//     cout << "\n- Pesos finales: ";
-//     for (size_t i = 0; i < trainedWeights.size(); i++) {
-//         cout << "\n\tPartición " << i + 1 << ": ";
-//         for (size_t j = 0; j < trainedWeights[i].size(); j++) {
-//             cout << trainedWeights[i][j] << " ";
-//         }
-//     }
-//     cout << endl;
-// }
