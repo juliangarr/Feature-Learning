@@ -6,6 +6,9 @@
 #./main parkinsons -gr
 #./main breast-cancer -gr
 
-#./main ecoli -bl 42
-#./main parkinsons -bl 42
+./main ecoli -bl 42
+./main parkinsons -bl 42
 #./main breast-cancer -bl 42
+
+./main ecoli -try 42
+./main parkinsons -try 42

@@ -1,35 +1,24 @@
 #ifndef BL_CLASSIFIER_H
 #define BL_CLASSIFIER_H
 
-#include "Classifier.h"
+#include "RandomToolsClassifier.h"
 
 #include <tuple>
 
 using namespace std;
 
-class BLClassifier : public Classifier{
+class BLClassifier : public RandomToolsClassifier{
     protected:
-        static constexpr int MAX_EVALUATIONS = 15000;
-        static constexpr double MEDIA = 0.0;
-        static constexpr double VARIANZA = 0.3;
-
         int MAX_NEIGHBORS;
-
     public:
+        // Constructor
         BLClassifier(const vector<vector<DataInstance>>& datos, string type);
 
+        // Sobreescritura del método train (llama a busquedaLocal)
         tuple<vector<double>, double> train(int fold) override;
 
+        // Algoritmo de búsqueda local
         tuple<vector<double>, double> busquedaLocal(int fold);
-
-        vector<double> generaSolucionInicial() const;
-
-        double funcionObjetivoBL(const vector<double>& weights) const;
-
-        double calculateClassRateInTrain(const vector<double>& weights) const;
-
-        double generaVecino(double peso_pos) const;
-        //vector<double> generaVecino(const vector<double>& weights, int index) const;
 };
 
 #endif

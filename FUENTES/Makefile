@@ -1,6 +1,7 @@
 # Compiler and flags
 CC = g++
 CFLAGS = -std=c++11 -Wall -O2
+#CFLAGS = -std=c++11 -Wall -O2 -g -pg
 
 # Source, include, build and bin directories
 SRCDIR := src

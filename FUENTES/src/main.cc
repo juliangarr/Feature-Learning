@@ -20,6 +20,7 @@ using Random = effolkronium::random_static;
 #define ONE_NN "-1nn"
 #define GREEDY "-gr"
 #define BUSQUEDA_LOCAL "-bl"
+#define TRY "-try"
 
 // Función para obtener las rutas completas de los archivos ARFF
 vector<string> getArffFilenames(const string& datasetFilename) {
@@ -108,6 +109,11 @@ int main(int argc, char* argv[]) {
         BLClassifier bl_classifier(parser.getDataInSets(), mayus_dataset);
         bl_classifier.kFoldCrossValidation();
     }
+    // else if (modelType == TRY) {
+    //     mayus_dataset += "TRY";
+    //     TryClassifier try_classifier(parser.getDataInSets(), mayus_dataset);
+    //     try_classifier.kFoldCrossValidation();
+    // }
     else {
         cerr << "ERROR: Modelo no reconocido. Los modelos disponibles son: -1nn, -gr, -bl." << endl;
         return 1;
