@@ -10,17 +10,21 @@ class GeneticClassifier : public RandomToolsClassifier{
         static constexpr int TAM_POBLACION = 50;
         static constexpr double PROB_MUT = 0.08;     // Prob. de mutación por individuo y también de genes por individuo
         static constexpr int TAM_TORNEO = 3;
+        static constexpr double ALPHA_BLX = 0.3;    // Alpha para cruce BLX-Alpha
+
+        int numPadres;
+        int numEsperadoCruces;
+        bool blx;
 
         vector<double> bestWeights;
-        vector<double> worstWeights1;
         double bestFitness;
-        double worstFitness1;
+        int bestIndividual;
 
-        int num_ind_mutar;
+        vector<double> fitnesses;
 
     public:
         // Constructor
-        GeneticClassifier(const vector<vector<DataInstance>>& datos, string type);
+        GeneticClassifier(const vector<vector<DataInstance>>& datos, string type, bool blx_alpha = false);
 
         // Sobreescritura del método train (llama a AGG)
         tuple<vector<double>, double> train(int fold) override;
@@ -29,22 +33,32 @@ class GeneticClassifier : public RandomToolsClassifier{
         tuple<vector<double>, double> AGG(int fold);
 
         // Función de evaluación inicial de la población
-        virtual void evaluarPoblacion(const vector<vector<double>>& population);
+        void evaluarPoblacion(const vector<vector<double>>& population);
 
-        // Función de selección de padres (depende del tipo de algoritmo genético)
-        virtual vector<vector<double>> generarPadres(const vector<vector<double>>& population);
+        // Función para encontrar y actualizar el mejor individuo de la población
+        void mejorIndividuo();
+
+        // Función de selección de padres
+            //vector<vector<double>> generarPadres(int numPadres, const vector<vector<double>>& population);
+        void generarPadres(int numPadres, const vector<vector<double>>& population, vector<vector<double>>& sucesores);
 
         // Selección por torneo (devuelve el mejor de 3 individuos aleatorios de la población actual) 
         vector<double> seleccionTorneo(const vector<vector<double>>& population);
 
-        // Función de cruce (depende del tipo de algoritmo genético)
-        virtual vector<vector<double>> cruce(const vector<vector<double>>& parents);
+        // Función de cruce
+        void cruce(vector<vector<double>>& parents);
+
+        // Cruce BLX-Alpha
+        void cruceBLX(vector<double>& padre1, vector<double>& padre2);
+
+        // Cruce Aritmético
+        void cruceAritmetico(vector<double>& padre1, vector<double>& padre2);
 
         // Función de mutación (depende solo de la probabilidad de mutación)
-        virtual void mutacion(vector<vector<double>>& population);
+        virtual void mutacion(vector<vector<double>>& sucesores);
 
         // Función de reemplazo (depende del tipo de algoritmo genético)
-        virtual vector<vector<double>> reemplazo(const vector<vector<double>>& population, const vector<vector<double>>& hijos);
+        virtual void reemplazo(vector<vector<double>>& population, vector<vector<double>>& sucesores);
 };
 
 #endif

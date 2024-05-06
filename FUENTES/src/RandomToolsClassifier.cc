@@ -5,6 +5,9 @@
 using namespace std;
 using Random = effolkronium::random_static;
 
+// RandomToolsClassifier::RandomToolsClassifier(const vector<vector<DataInstance>>& datos, string type) : Classifier(datos, type), normalDistribution(MEDIA, DESVIACION_ESTANDAR) {
+//     evaluationsDone = 0;
+// }
 RandomToolsClassifier::RandomToolsClassifier(const vector<vector<DataInstance>>& datos, string type) : Classifier(datos, type) {
     evaluationsDone = 0;
 }
@@ -50,22 +53,24 @@ double RandomToolsClassifier::funcionObjetivoLocal(const vector<double>& weights
     return ( ALPHA * calculateClassRateInTrain(weights) + (1.0 - ALPHA) * calculateReductionRate(weights) );
 }
 
-double RandomToolsClassifier::mutacionMovNormal(double peso_pos) const {
-    // Create a normal distribution
-    normal_distribution<double> distribution(MEDIA, DESVIACION_ESTANDAR);
+
+void RandomToolsClassifier::mutacionMovNormal(vector<double>& weights) {
+    // OJOOOO ELIMINARRRRRRRRR
+    normal_distribution<double> normalDistribution(MEDIA, DESVIACION_ESTANDAR);
+
+    // Select a random feature
+    int index = Random::get(0, numFeatures - 1);
 
     // Modify the weight of the feature with a random value (normal distribution)
-    peso_pos += Random::get(distribution);
+    weights[index] += Random::get(normalDistribution);
 
     // Truncate the value to the range [0, 1]
-    if (peso_pos < 0.0) {
-        peso_pos = 0.0;
+    if (weights[index] < 0.0) {
+        weights[index] = 0.0;
     }
-    else if (peso_pos > 1.0) {
-        peso_pos = 1.0;
+    else if (weights[index] > 1.0) {
+        weights[index] = 1.0;
     }
-
-    return peso_pos;
 }
 // vector<double> BLClassifier::generaVecino(const vector<double>& weights, int index) const {
 //     vector<double> newWeights = weights;

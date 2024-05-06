@@ -173,35 +173,6 @@ double Classifier::funcionObjetivo(const vector<double>& weights, int fold) {
     return (ALPHA * tasa_class[fold] + (1.0 - ALPHA) * tasa_red[fold]);
 }
 
-// void Classifier::resultsToCSV() const {
-//     // Create filename
-//     string filename = "results_" + tipo + ".csv";
-
-//     ofstream outputFile(filename);
-
-//     // Write header
-//     outputFile << "--------- RESULTADOS FINALES ---------   " + tipo + "   " << endl;
-//     outputFile << endl;
-//     outputFile << "Partición,%_class,%_red,Fit.,T" << endl;
-
-//     // Write data for each fold
-//     for (int fold = 0; fold < k_Folds; ++fold) {
-//         outputFile << fold + 1 << ","; // Partition number
-
-//         // Write Ecoli data
-//         outputFile << fixed << setprecision(2) << tasa_class[fold] << "," << tasa_red[fold] << ","  << fitness[fold] << "," << scientific << tiempo[fold];
-
-//         // New line for next fold
-//         outputFile << endl;
-//     }
-
-//     // Write average row
-//     outputFile << "Media,";
-//     outputFile << fixed << setprecision(2) << mean(tasa_class) << ","  << mean(tasa_red) << ","  << mean(fitness) << "," << scientific << mean(tiempo);
-
-//     outputFile.close();
-// }
-
 void Classifier::resultsToCSV() const {
     // Crear la ruta completa del archivo
     // string filepath = "../../BIN/results/results_" + tipo + ".csv";

@@ -39,7 +39,7 @@ tuple<vector<double>, double> BLClassifier::busquedaLocal(int fold) {
                 // Generate a neighbor solution
                     //neighborWeights = generaVecino(bestWeights, index[i]);
                 neighborWeights = bestWeights;
-                neighborWeights[index[i]] = mutacionMovNormal(bestWeights[index[i]]);
+                neighborWeights[index[i]] = mutacionMovNormalBL(bestWeights[index[i]]);
                 consecutiveNeighbors++;
 
                 // Evaluate the neighbor solution
@@ -61,4 +61,23 @@ tuple<vector<double>, double> BLClassifier::busquedaLocal(int fold) {
 
     // Return the best solution (weights and fitness)
     return make_tuple(bestWeights, fitness);
+}
+
+double BLClassifier::mutacionMovNormalBL(double peso_pos) const {
+    // OJO ELIMINARRRRR
+    normal_distribution<double> normalDistribution(MEDIA, DESVIACION_ESTANDAR);
+
+    // Modify the weight of the feature with a random value (normal distribution)
+    peso_pos += Random::get(normalDistribution);
+
+    // Truncate the value to the range [0, 1]
+    if (peso_pos < 0.0) {
+        return 0.0;
+    }
+    else if (peso_pos > 1.0) {
+        return 1.0;
+    }
+    else {
+        return peso_pos;
+    }
 }

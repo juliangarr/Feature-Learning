@@ -10,6 +10,7 @@ using namespace std;
 class BLClassifier : public RandomToolsClassifier{
     protected:
         int MAX_NEIGHBORS;
+        
     public:
         // Constructor
         BLClassifier(const vector<vector<DataInstance>>& datos, string type);
@@ -19,6 +20,9 @@ class BLClassifier : public RandomToolsClassifier{
 
         // Algoritmo de búsqueda local
         tuple<vector<double>, double> busquedaLocal(int fold);
+
+        // Mutación de un gen (específico de BL)
+        double mutacionMovNormalBL(double peso_pos) const;
 };
 
 #endif

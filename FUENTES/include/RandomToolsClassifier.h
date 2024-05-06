@@ -3,8 +3,10 @@
 
 #include "Classifier.h"
 #include <cmath>
+#include "random.hpp"
 
 using namespace std;
+using Random = effolkronium::random_static;
 
 class RandomToolsClassifier : public Classifier{
     protected:
@@ -12,6 +14,9 @@ class RandomToolsClassifier : public Classifier{
         static constexpr double MEDIA = 0.0;
         static constexpr double VARIANZA = 0.3;
         const double DESVIACION_ESTANDAR = sqrt(VARIANZA);
+
+        // Create a normal distribution (IN CONSTRUCTOR)
+        // normal_distribution<double> normalDistribution;
 
         // Contador de evaluaciones de la función objetivo
         int evaluationsDone;
@@ -30,8 +35,9 @@ class RandomToolsClassifier : public Classifier{
         double calculateClassRateInTrain(const vector<double>& weights) const;
 
         // Operador de mutación (genera vecino)
-        double mutacionMovNormal(double peso_pos) const;
-        //vector<double> generaVecino(const vector<double>& weights, int index) const;
+        void mutacionMovNormal(vector<double>& weights);
+            //double mutacionMovNormal(double peso_pos) const;
+            //vector<double> generaVecino(const vector<double>& weights, int index) const;
 };
 
 #endif

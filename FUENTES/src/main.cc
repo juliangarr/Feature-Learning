@@ -1,8 +1,12 @@
 #include "ARFFParser.h"
-#include "Classifier.h"
 #include "GreedyClassifier.h"
 #include "BLClassifier.h"
+#include "AGGClassifier.h"
+#include "AGEClassifier.h"
 // Incluir otros modelos aquí
+#include "Classifier.h"
+#include "GeneticClassifier.h"
+#include "RandomToolsClassifier.h"
 
 #include "random.hpp"
 
@@ -12,7 +16,7 @@
 #include <algorithm>    // Para transform
 #include <cctype>       // Para toupper
 #include <sstream>
-#include <unistd.h> // Para getcwd()
+#include <unistd.h>     // Para getcwd()
 
 using namespace std;
 using Random = effolkronium::random_static;
@@ -20,7 +24,13 @@ using Random = effolkronium::random_static;
 #define ONE_NN "-1nn"
 #define GREEDY "-gr"
 #define BUSQUEDA_LOCAL "-bl"
-#define TRY "-try"
+#define AGG "-agg"
+#define AGG_BLX "-agg_blx"
+#define AGE "-age"
+#define AGE_BLX "-age_blx"
+#define AM_10_1 "-am-10-1"
+#define AM_10_01 "-am-10-01"
+#define AM_10_001 "-am-10-001"
 
 // Función para obtener las rutas completas de los archivos ARFF
 vector<string> getArffFilenames(const string& datasetFilename) {
@@ -109,11 +119,26 @@ int main(int argc, char* argv[]) {
         BLClassifier bl_classifier(parser.getDataInSets(), mayus_dataset);
         bl_classifier.kFoldCrossValidation();
     }
-    // else if (modelType == TRY) {
-    //     mayus_dataset += "TRY";
-    //     TryClassifier try_classifier(parser.getDataInSets(), mayus_dataset);
-    //     try_classifier.kFoldCrossValidation();
-    // }
+    else if (modelType == AGG) {
+        mayus_dataset += "AGG";
+        AGGClassifier agg_classifier(parser.getDataInSets(), mayus_dataset);
+        agg_classifier.kFoldCrossValidation();
+    }
+    else if (modelType == AGG_BLX) {
+        mayus_dataset += "AGG_BLX";
+        AGGClassifier agg_classifier_blx(parser.getDataInSets(), mayus_dataset, true);
+        agg_classifier_blx.kFoldCrossValidation();
+    }
+    else if (modelType == AGE) {
+        mayus_dataset += "AGE";
+        AGEClassifier age_classifier(parser.getDataInSets(), mayus_dataset);
+        age_classifier.kFoldCrossValidation();
+    }
+    else if (modelType == AGE_BLX) {
+        mayus_dataset += "AGE_BLX";
+        AGEClassifier age_classifier_blx(parser.getDataInSets(), mayus_dataset, true);
+        age_classifier_blx.kFoldCrossValidation();
+    }
     else {
         cerr << "ERROR: Modelo no reconocido. Los modelos disponibles son: -1nn, -gr, -bl." << endl;
         return 1;
