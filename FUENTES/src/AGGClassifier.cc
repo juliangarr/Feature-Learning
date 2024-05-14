@@ -1,6 +1,7 @@
 #include "AGGClassifier.h"
 
 #include "random.hpp"
+#include <iostream>
 
 using namespace std;
 using Random = effolkronium::random_static;
@@ -48,8 +49,13 @@ void AGGClassifier::reemplazo(vector<vector<double>>& population, vector<vector<
         // Actualizar el mejor individuo de la generación actual con el de la anterior
         bestFitness = bestOldFitness;
         bestIndividual = worstIndividual1;      // El mejor individuo de la generación anterior ahora ocupa la posición del peor de la actual
+        
+        // Actualizar la fitness del mejor individuo
+        fitnesses[worstIndividual1] = bestFitness;
     }
     
     // Reemplazar la población por los sucesores
-    population = sucesores;
+        //population = sucesores;
+    population = move(sucesores);
+    sucesores.resize(TAM_POBLACION, vector<double>(numFeatures));
 }

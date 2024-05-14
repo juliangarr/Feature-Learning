@@ -55,7 +55,7 @@ double RandomToolsClassifier::funcionObjetivoLocal(const vector<double>& weights
 
 
 void RandomToolsClassifier::mutacionMovNormal(vector<double>& weights) {
-    // OJOOOO ELIMINARRRRRRRRR
+    // Generate a normal distribution
     normal_distribution<double> normalDistribution(MEDIA, DESVIACION_ESTANDAR);
 
     // Select a random feature

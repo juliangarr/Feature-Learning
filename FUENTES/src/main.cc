@@ -3,6 +3,9 @@
 #include "BLClassifier.h"
 #include "AGGClassifier.h"
 #include "AGEClassifier.h"
+#include "AMProbClassifier.h"
+#include "OLD_BLClassifier.h"
+#include "AMBestClassifier.h"
 // Incluir otros modelos aquí
 #include "Classifier.h"
 #include "GeneticClassifier.h"
@@ -28,9 +31,10 @@ using Random = effolkronium::random_static;
 #define AGG_BLX "-agg_blx"
 #define AGE "-age"
 #define AGE_BLX "-age_blx"
-#define AM_10_1 "-am-10-1"
-#define AM_10_01 "-am-10-01"
-#define AM_10_001 "-am-10-001"
+#define AM_ALL "-am_all"
+#define AM_RAND "-am_rand"
+#define AM_BEST "-am_best"
+#define OLD_BUSQUEDA_LOCAL "-bl_old"
 
 // Función para obtener las rutas completas de los archivos ARFF
 vector<string> getArffFilenames(const string& datasetFilename) {
@@ -139,8 +143,30 @@ int main(int argc, char* argv[]) {
         AGEClassifier age_classifier_blx(parser.getDataInSets(), mayus_dataset, true);
         age_classifier_blx.kFoldCrossValidation();
     }
+    else if (modelType == AM_ALL) {
+        mayus_dataset += "AM_ALL";
+        AMProbClassifier am_all_classifier(parser.getDataInSets(), mayus_dataset, false, 10);
+        am_all_classifier.kFoldCrossValidation();
+    }
+    else if (modelType == AM_RAND) {
+        mayus_dataset += "AM_RAND";
+        AMProbClassifier am_rand_classifier(parser.getDataInSets(), mayus_dataset, false, 10, 0.1);
+        am_rand_classifier.kFoldCrossValidation();
+    }
+    else if (modelType == AM_BEST) {
+        mayus_dataset += "AM_BEST";
+        AMBestClassifier am_best_classifier(parser.getDataInSets(), mayus_dataset, false, 10, 0.1);
+        am_best_classifier.kFoldCrossValidation();
+    }
+    // PRUEBA
+    else if (modelType == OLD_BUSQUEDA_LOCAL) {
+        mayus_dataset += "OLD_BL";
+        OLD_BLClassifier old_bl_classifier(parser.getDataInSets(), mayus_dataset);
+        old_bl_classifier.kFoldCrossValidation();
+    }
+    //--------------------------------
     else {
-        cerr << "ERROR: Modelo no reconocido. Los modelos disponibles son: -1nn, -gr, -bl." << endl;
+        cerr << "ERROR: Modelo no reconocido. Los modelos disponibles son: -1nn, -gr, -bl, -agg, -agg_blx, -age, -age_blx, -am_all, -am_rand, -am_best" << endl;
         return 1;
     }
 

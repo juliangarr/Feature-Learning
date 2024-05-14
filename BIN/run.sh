@@ -33,3 +33,18 @@
 ./main parkinsons -age_blx 42
 ./main breast-cancer -age_blx 42
 
+#        AM_ALL
+./main ecoli -am_all 42
+./main parkinsons -am_all 42
+./main breast-cancer -am_all 42
+
+#        AM_RAND
+./main ecoli -am_rand 42
+./main parkinsons -am_rand 42
+./main breast-cancer -am_rand 42
+
+#        AM_BEST
+./main ecoli -am_best 42
+./main parkinsons -am_best 42
+./main breast-cancer -am_best 42
+

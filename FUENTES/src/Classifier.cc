@@ -239,8 +239,10 @@ void Classifier::printResults() const {
     cout << "- Tasa Reducción: \t" << tasa_r << " %" << endl;
     cout << "- Fitness: \t\t" << fit << endl;
     cout << "- Tiempo: \t\t" << scientific << time << " ms" << endl;
+
+    // Restaurar el formato de salida a fixed
+    cout << fixed;
     
-    /*
     // Print trained weights
     cout << "\n- Pesos finales: ";
     for (size_t i = 0; i < trainedWeights.size(); i++) {
@@ -249,9 +251,6 @@ void Classifier::printResults() const {
             cout << trainedWeights[i][j] << " ";
         }
     }
-    */
-    // Restaurar el formato de salida a fixed
-    cout << fixed;
 
     cout << endl;
 }

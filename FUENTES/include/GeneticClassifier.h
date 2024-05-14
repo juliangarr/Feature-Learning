@@ -9,8 +9,8 @@ class GeneticClassifier : public RandomToolsClassifier{
     protected:
         static constexpr int TAM_POBLACION = 50;
         static constexpr double PROB_MUT = 0.08;     // Prob. de mutación por individuo y también de genes por individuo
-        static constexpr int TAM_TORNEO = 3;
-        static constexpr double ALPHA_BLX = 0.3;    // Alpha para cruce BLX-Alpha
+        // ELIMINADA PARA AGILIZAR. static constexpr int TAM_TORNEO = 3;
+        // ELIMINADA PARA AGILIZAR. static constexpr double ALPHA_BLX = 0.3;    // Alpha para cruce BLX-Alpha
 
         int numPadres;
         int numEsperadoCruces;
@@ -40,13 +40,13 @@ class GeneticClassifier : public RandomToolsClassifier{
 
         // Función de selección de padres
             //vector<vector<double>> generarPadres(int numPadres, const vector<vector<double>>& population);
-        void generarPadres(int numPadres, const vector<vector<double>>& population, vector<vector<double>>& sucesores);
+        void generarPadres(int numDad, const vector<vector<double>>& population, vector<vector<double>>& sucesores) const;
 
         // Selección por torneo (devuelve el mejor de 3 individuos aleatorios de la población actual) 
-        vector<double> seleccionTorneo(const vector<vector<double>>& population);
+        vector<double> seleccionTorneo(const vector<vector<double>>& population) const;
 
         // Función de cruce
-        void cruce(vector<vector<double>>& parents);
+        void cruce(vector<vector<double>>& sucesores);
 
         // Cruce BLX-Alpha
         void cruceBLX(vector<double>& padre1, vector<double>& padre2);

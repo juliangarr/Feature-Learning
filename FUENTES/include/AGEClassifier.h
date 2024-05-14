@@ -7,7 +7,7 @@ using namespace std;
 
 class AGEClassifier : public GeneticClassifier {
     protected:
-        static constexpr double PROB_CRUCE = 0.68;   // Prob. de cruce
+        static constexpr double PROB_CRUCE = 1.0;   // Prob. de cruce
 
     public:
         // Constructor

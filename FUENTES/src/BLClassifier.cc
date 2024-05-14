@@ -14,6 +14,9 @@ tuple<vector<double>, double> BLClassifier::train(int fold) {
 }
 
 tuple<vector<double>, double> BLClassifier::busquedaLocal(int fold) {
+    // Set the number of evaluations to zero
+    evaluationsDone = 0;
+    
     // Initialize the neighbors counter
     int consecutiveNeighbors = 0;
 
@@ -64,7 +67,7 @@ tuple<vector<double>, double> BLClassifier::busquedaLocal(int fold) {
 }
 
 double BLClassifier::mutacionMovNormalBL(double peso_pos) const {
-    // OJO ELIMINARRRRR
+    // Create a normal distribution
     normal_distribution<double> normalDistribution(MEDIA, DESVIACION_ESTANDAR);
 
     // Modify the weight of the feature with a random value (normal distribution)
