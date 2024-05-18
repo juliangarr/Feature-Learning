@@ -30,7 +30,7 @@ class GeneticClassifier : public RandomToolsClassifier{
         tuple<vector<double>, double> train(int fold) override;
 
         // Algoritmo genético generacional
-        tuple<vector<double>, double> AGG(int fold);
+        tuple<vector<double>, double> AG(int fold);
 
         // Función de evaluación inicial de la población
         void evaluarPoblacion(const vector<vector<double>>& population);

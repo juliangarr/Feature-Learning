@@ -27,10 +27,10 @@ GeneticClassifier::GeneticClassifier(const vector<vector<DataInstance>>& datos, 
 }
 
 tuple<vector<double>, double> GeneticClassifier::train(int fold) {
-    return AGG(fold);
+    return AG(fold);
 }
 
-tuple<vector<double>, double> GeneticClassifier::AGG(int fold) {
+tuple<vector<double>, double> GeneticClassifier::AG(int fold) {
     // Restablecer el número de evaluaciones
     evaluationsDone = 0;
     
