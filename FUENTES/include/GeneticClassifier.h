@@ -26,7 +26,7 @@ class GeneticClassifier : public RandomToolsClassifier{
         // Constructor
         GeneticClassifier(const vector<vector<DataInstance>>& datos, string type, bool blx_alpha = false);
 
-        // Sobreescritura del método train (llama a AGG)
+        // Sobreescritura del método train (llama a AG)
         tuple<vector<double>, double> train(int fold) override;
 
         // Algoritmo genético generacional
