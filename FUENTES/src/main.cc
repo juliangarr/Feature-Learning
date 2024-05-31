@@ -6,6 +6,10 @@
 #include "AMProbClassifier.h"
 #include "OLD_BLClassifier.h"
 #include "AMBestClassifier.h"
+#include "ILS_ESClassifier.h"
+#include "ILSClassifier.h"
+#include "BMBClassifier.h"
+#include "ESClassifier.h"
 // Incluir otros modelos aquí
 #include "Classifier.h"
 #include "GeneticClassifier.h"
@@ -35,6 +39,10 @@ using Random = effolkronium::random_static;
 #define AM_RAND "-am_rand"
 #define AM_BEST "-am_best"
 #define OLD_BUSQUEDA_LOCAL "-bl_old"
+#define BMB "-bmb"
+#define ES "-es"
+#define ILS "-ils"
+#define ILS_ES "-ils-es"
 
 // Función para obtener las rutas completas de los archivos ARFF
 vector<string> getArffFilenames(const string& datasetFilename) {
@@ -158,6 +166,26 @@ int main(int argc, char* argv[]) {
         AMBestClassifier am_best_classifier(parser.getDataInSets(), mayus_dataset, false, 10, 0.1);
         am_best_classifier.kFoldCrossValidation();
     }
+    else if (modelType == BMB) {
+        mayus_dataset += "BMB";
+        BMBClassifier bmb_classifier(parser.getDataInSets(), mayus_dataset);
+        bmb_classifier.kFoldCrossValidation();
+    }
+    else if (modelType == ES) {
+        mayus_dataset += "ES";
+        ESClassifier es_classifier(parser.getDataInSets(), mayus_dataset);
+        es_classifier.kFoldCrossValidation();
+    }
+    else if (modelType == ILS) {
+        mayus_dataset += "ILS";
+        ILSClassifier ils_classifier(parser.getDataInSets(), mayus_dataset);
+        ils_classifier.kFoldCrossValidation();
+    }
+    else if (modelType == ILS_ES) {
+        mayus_dataset += "ILS-ES";
+        ILS_ESClassifier ils_es_classifier(parser.getDataInSets(), mayus_dataset);
+        ils_es_classifier.kFoldCrossValidation();
+    }
     // PRUEBA
     else if (modelType == OLD_BUSQUEDA_LOCAL) {
         mayus_dataset += "OLD_BL";
@@ -166,7 +194,7 @@ int main(int argc, char* argv[]) {
     }
     //--------------------------------
     else {
-        cerr << "ERROR: Modelo no reconocido. Los modelos disponibles son: -1nn, -gr, -bl, -agg, -agg_blx, -age, -age_blx, -am_all, -am_rand, -am_best" << endl;
+        cerr << "ERROR: Modelo no reconocido. Los modelos disponibles son:\n\tCLASICOS: -1nn, -gr, -bl \n\tGENETICOS: -agg, -agg_blx, -age, -age_blx \n\tMEMETICOS: -am_all, -am_rand, -am_best \n\tTRAYECTORIAS: -bmb, -es, -ils, -ils-es" << endl;
         return 1;
     }
 
