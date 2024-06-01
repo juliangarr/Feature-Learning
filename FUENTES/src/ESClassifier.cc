@@ -39,6 +39,11 @@ tuple<vector<double>, double> ESClassifier::ES(int fold) {
     // Inicializamos la temperatura final
     double temp_f = 0.001;
 
+    // Comprobar que la temperatura final no sea mayor que la inicial
+    while (temp_f >= temp_0) {
+        temp_f = temp_f/10;
+    }
+
     // Calculamos el valor de BETA
     const double BETA = (temp_0 - temp_f)/(M*temp_0*temp_f);
     
@@ -88,6 +93,8 @@ tuple<vector<double>, double> ESClassifier::ES(int fold) {
 
     // Calculamos el REAL fitness
     double real_fitness = funcionObjetivo(bestWeights, fold); 
+
+    printf("Evaluaciones ES: %d\n", evaluationsDone);
 
     // Devolvemos la mejor solucion (pesos y fitness)
     return make_tuple(bestWeights, real_fitness);

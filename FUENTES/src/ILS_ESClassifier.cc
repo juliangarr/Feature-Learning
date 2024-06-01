@@ -37,6 +37,11 @@ double ILS_ESClassifier::ESIndividual(vector<double>& solucionES, int numIteraci
     // Inicializamos la temperatura final
     double temp_f = 0.001;
 
+    // Comprobar que la temperatura final no sea mayor que la inicial
+    while (temp_f >= temp_0) {
+        temp_f = temp_f/10;
+    }
+
     // Calculamos el valor de BETA
     const double BETA = (temp_0 - temp_f)/(M*temp_0*temp_f);
     
@@ -55,7 +60,7 @@ double ILS_ESClassifier::ESIndividual(vector<double>& solucionES, int numIteraci
         numExits = 0;
 
         // Bucle (INTERNO)
-        while ( evaluationsDone < maxEvals && numNeighbors < maxNeighbors && numExits < maxExits ) {
+        while ( numEvals < maxEvals && numNeighbors < maxNeighbors && numExits < maxExits ) {
             // Generamos un vecino
             vecino = solucionES;
             mutacionMovNormal(vecino);
@@ -86,5 +91,5 @@ double ILS_ESClassifier::ESIndividual(vector<double>& solucionES, int numIteraci
     }
     solucionES = bestSolucion;
 
-    return bestFitness;
+    return bestFitness;    
 }

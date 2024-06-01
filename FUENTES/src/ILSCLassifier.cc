@@ -58,6 +58,8 @@ tuple<vector<double>, double> ILSClassifier::ILS(int fold, function<double(vecto
     // Calculamos el REAL fitness
     double real_fitness = funcionObjetivo(bestSolucion, fold); 
 
+    printf("Evaluaciones ILS (ILS-ES): %d\n", evaluationsDone);
+
     // Devolvemos la mejor solucion (pesos y fitness)
     return make_tuple(bestSolucion, real_fitness);
 }

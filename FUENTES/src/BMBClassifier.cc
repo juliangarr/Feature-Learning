@@ -50,6 +50,8 @@ tuple<vector<double>, double> BMBClassifier::BMB(int fold) {
     // Calculamos el REAL fitness
     double real_fitness = funcionObjetivo(bestSolucion, fold); 
 
+    printf("Evaluaciones BMB: %d\n", evaluationsDone);
+
     // Devolvemos la mejor solucion (pesos y fitness)
     return make_tuple(bestSolucion, real_fitness);
 }
